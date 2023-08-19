@@ -1,0 +1,22 @@
+{
+  "name": "trilium-types",
+  "version": "1.0.0",
+  "description": "Type definitions for Trilium Notes.",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "author": "Zerebos",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-editor-balloon": "^39.0.1",
+    "@types/codemirror": "^5.60.8",
+    "@types/jquery": "^3.5.16",
+    "@types/node": "^20.5.0",
+    "@types/xml2js": "^0.4.11",
+    "axios": "^1.4.0",
+    "dayjs": "^1.11.9"
+  }
+}
