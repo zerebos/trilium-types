@@ -14,7 +14,7 @@ export class BasicWidget extends Component {
     readonly childPositionCounter: integer;
     readonly cssEl: string;
     $widget: JQuery;
-    child(...components: Component[]): this;
+    child(...components: ReadonlyArray<Component>): this;
     id(id: string): this;
     class(className: string): this;
     css(name: string, value: string): this;

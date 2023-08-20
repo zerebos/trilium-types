@@ -4,8 +4,7 @@ import {Froca} from "./froca";
 import {Note} from "./note";
 
 
-export interface Branch {
-    froca: Froca;
+export interface BranchPojo {
     /**
      * primary key
      */
@@ -16,6 +15,12 @@ export interface Branch {
     prefix: string;
     isExpanded: boolean;
     fromSearchNote: boolean;
+}
+
+export interface Branch extends BranchPojo {
+    new(froca: Froca, row: BranchPojo): Branch;
+    froca: Froca;
+    update(row: BranchPojo): void;
     getNote(): Note;
     getNoteFromCache(): Note;
     getParentNote(): Note;
@@ -23,4 +28,6 @@ export interface Branch {
      * @returns true if it's top level, meaning its parent is the root note
      */
     isTopLevel(): boolean;
+    readonly toString: string;
+    readonly pojo: BranchPojo;
 }

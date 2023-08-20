@@ -2,49 +2,73 @@ import {Froca} from "./froca";
 import {Attachment} from "./attachment";
 import {Branch} from "./branch";
 import {Blob} from "./blob";
-import {Attribute} from "./attribute";
+import {Attribute, Label, Relation} from "./attribute";
 
 
-export interface Note {
-    new(froca: Froca, row: {
-        [key: string]: object;
-    }): Note;
-    froca: Froca;
-    attributes: string[];
-    targetRelations: string[];
-    parents: string[];
-    children: string[];
-    parentToBranch: {
-        [key: string]: string;
-    };
-    childToBranch: {
-        [key: string]: string;
-    };
-    attachments: Attachment[] | null;
+type NoteType = "text" | "code" | "file" | "render";
+type ScriptEnvironment = "frontend" | "backend" | null;
+
+interface NotePathRecord {
+    isArchived: boolean;
+    isInHoistedSubTree: boolean;
+    isSearch: boolean;
+    notePath: string[];
+    isHidden: boolean;
+}
+
+type BranchPath = Record<string, string>;
+
+export interface NotePojo {
     noteId: string;
     title: string;
     isProtected: boolean;
     /**
      * one of 'text', 'code', 'file' or 'render'
      */
-    type: string;
+    type: NoteType;
     /**
      * content-type, e.g. "application/json"
      */
     mime: string;
+}
+
+export interface Note extends NotePojo {
+    new(froca: Froca, row: NotePojo): Note;
+    froca: Froca;
+    attributes: string[];
+    targetRelations: string[];
+    parents: string[];
+    children: string[];
+    parentToBranch: BranchPath;
+    childToBranch: BranchPath;
+    attachments?: Attachment[];
+    update(row: NotePojo): void;
+    addParent(parentNoteId: string, branchId: string, sort?: boolean): void;
+    addChild(childNoteId: string, brachId: string, sort?: boolean): void;
+    sortChildren(): void;
     isJson(): boolean;
+    getContent(): Promise<string>;
     getParentBranchIds(): string[];
+    /**
+     * @deprecated use getParentBranchIds()
+     */
     getBranchIds(): string[];
     getParentBranches(): Branch[];
+    /**
+     * @deprecated use getParentBranches()
+     */
     getBranches(): Branch[];
     hasChildren(): boolean;
     getChildBranches(): Branch[];
     getParentNoteIds(): string[];
     getParentNotes(): Note[];
+    sortParent(): void;
+    readonly isArchived: boolean;
     getChildNoteIds(): string[];
     getChildNotes(): Promise<Note[]>;
     getAttachments(): Promise<Attachment[]>;
     getAttachmentById(): Promise<Attachment>;
+    isEligibleForConversionToAttachment(): boolean;
     /**
      * @param [type] - (optional) attribute type to filter
      * @param [name] - (optional) attribute name to filter
@@ -57,12 +81,13 @@ export interface Note {
      * @returns all note's attributes, including inherited ones
      */
     getAttributes(type?: string, name?: string): Attribute[];
+    isRoot(): boolean;
     /**
      * Gives all possible note paths leading to this note. Paths containing search note are ignored (could form cycles)
      * @returns - array of notePaths (each represented by array of noteIds constituting the particular note path)
      */
-    getAllNotePaths(): string[];
-    getSortedNotePathRecords(hoistedNoteId?: string): {isArchived: boolean; isInHoistedSubTree: boolean; isSearch: boolean; notePath: string[]; isHidden: boolean;}[];
+    getAllNotePaths(): string[][];
+    getSortedNotePathRecords(hoistedNoteId?: string): NotePathRecord[];
     /**
      * Returns the note path considered to be the "best"
      * @returns array of noteIds constituting the particular note path
@@ -76,7 +101,7 @@ export interface Note {
     /**
      * @returns boolean - true if there's no non-hidden path, note is not cloned to the visible tree
      */
-    isHiddenCompletely(): any;
+    isHiddenCompletely(): boolean;
     /**
      * @param [name] - label name to filter
      * @returns all note's labels (attributes with type label), including inherited ones
@@ -86,17 +111,30 @@ export interface Note {
      * @param [name] - label name to filter
      * @returns all note's labels (attributes with type label), including inherited ones
      */
-    getLabels(name?: string): Attribute[];
+    getLabels(name?: string): Label[];
+    /**
+     * @returns {string} icon class for note
+     */
+    getIcon(): string;
+    /**
+     * @returns {string} color class label value
+     */
+    getColorClass(): string;
+    /**
+     * @returns {boolean} true when this nolte has child notes
+     */
+    isFolder(): boolean;
+    getFilteredChildBranches(): Branch[];
     /**
      * @param [name] - relation name to filter
      * @returns all note's relations (attributes with type relation), including inherited ones
      */
-    getOwnedRelations(name?: string): Attribute[];
+    getOwnedRelations(name?: string): Relation[];
     /**
      * @param [name] - relation name to filter
      * @returns all note's relations (attributes with type relation), including inherited ones
      */
-    getRelations(name?: string): Attribute[];
+    getRelations(name?: string): Relation[];
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
@@ -114,25 +152,25 @@ export interface Note {
      * @param name - attribute name
      * @returns attribute of the given type and name. If there are more such attributes, first is returned. Returns null if there's no such attribute belonging to this note.
      */
-    getOwnedAttribute(type: string, name: string): Attribute;
+    getOwnedAttribute(type: string, name: string): Attribute | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute of the given type and name. If there are more such attributes, first is returned. Returns null if there's no such attribute belonging to this note.
      */
-    getAttribute(type: string, name: string): Attribute;
+    getAttribute(type: string, name: string): Attribute | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of the given type and name or null if no such attribute exists.
      */
-    getOwnedAttributeValue(type: string, name: string): string;
+    getOwnedAttributeValue(type: string, name: string): string | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of the given type and name or null if no such attribute exists.
      */
-    getAttributeValue(type: string, name: string): string;
+    getAttributeValue(type: string, name: string): string | null;
     /**
      * @param name - label name
      * @returns true if label exists (excluding inherited)
@@ -162,42 +200,42 @@ export interface Note {
      * @param name - label name
      * @returns label if it exists, null otherwise
      */
-    getOwnedLabel(name: string): Attribute;
+    getOwnedLabel(name: string): Label | null;
     /**
      * @param name - label name
      * @returns label if it exists, null otherwise
      */
-    getLabel(name: string): Attribute;
+    getLabel(name: string): Label | null;
     /**
      * @param name - relation name
      * @returns relation if it exists, null otherwise
      */
-    getOwnedRelation(name: string): Attribute;
+    getOwnedRelation(name: string): Relation | null;
     /**
      * @param name - relation name
      * @returns relation if it exists, null otherwise
      */
-    getRelation(name: string): Attribute;
+    getRelation(name: string): Relation | null;
     /**
      * @param name - label name
      * @returns label value if label exists, null otherwise
      */
-    getOwnedLabelValue(name: string): string;
+    getOwnedLabelValue(name: string): string | null;
     /**
      * @param name - label name
      * @returns label value if label exists, null otherwise
      */
-    getLabelValue(name: string): string;
+    getLabelValue(name: string): string | null;
     /**
      * @param name - relation name
      * @returns relation value if relation exists, null otherwise
      */
-    getOwnedRelationValue(name: string): string;
+    getOwnedRelationValue(name: string): string | null;
     /**
      * @param name - relation name
      * @returns relation value if relation exists, null otherwise
      */
-    getRelationValue(name: string): string;
+    getRelationValue(name: string): string | null;
     /**
      * @returns target note of the relation or null (if target is empty or note was not found)
      */
@@ -207,7 +245,11 @@ export interface Note {
      */
     getRelationTargets(name?: string): Promise<Note[]>;
     getNotesToInheritAttributesFrom(): Note[];
-    invalidateAttributeCache(): void;
+    getPromotedDefinitionAttributes(): Attribute[];
+    hasAncestor(ancestorNoteId: string, followTemplate?: boolean, visitedNoteIds?: string[]): boolean;
+    isInHiddenSubtree(): boolean;
+    // Intentionally commented out since it is deprecated and does not do anything (NOOP)
+    // invalidateAttributeCache(): void;
     /**
      * Get relations which target this note
      */
@@ -218,6 +260,11 @@ export interface Note {
     getTargetRelationSourceNotes(): Promise<Note[]>;
     getNoteComplement(): Promise<Blob>;
     getBlob(): Promise<Blob>;
+    toString(): string;
+    readonly dto: Omit<{} & this, "froca">;
+    getCssClass(): string;
+    getWorkspaceIconClass(): string;
+    getWorkspaceTabBackgroundColor(): string;
     /**
      * @returns true if this note is JavaScript (code or file)
      */
@@ -229,5 +276,10 @@ export interface Note {
     /**
      * @returns JS script environment - either "frontend" or "backend"
      */
-    getScriptEnv(): string | null;
+    getScriptEnv(): ScriptEnvironment | null;
+    executeScript(): Promise<void>;
+    isShared(): boolean;
+    isContentAvailable(): boolean;
+    isLaunchBarConfig(): boolean;
+    isOptions(): boolean;
 }

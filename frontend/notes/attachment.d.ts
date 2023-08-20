@@ -5,8 +5,7 @@ import {Blob} from "./blob";
 import {Note} from "./note";
 
 
-export declare interface Attachment {
-    froca: Froca;
+export interface AttachmentPojo {
     attachmentId: string;
     ownerId: string;
     role: string;
@@ -15,10 +14,13 @@ export declare interface Attachment {
     dateModified: string;
     utcDateModified: string;
     utcDateScheduledForErasureSince: string;
-    /**
-     * optionally added to the entity
-     */
-    contentLength: integer;
+    contentLength?: integer;
+}
+
+export interface Attachment extends AttachmentPojo {
+    new(froca: Froca, row: AttachmentPojo): Attachment;
+    froca: Froca;
+    update(row: AttachmentPojo): void;
     getNote(): Note;
     getBlob(): Blob;
 }

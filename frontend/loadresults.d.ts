@@ -1,5 +1,12 @@
 import {Attribute} from "./notes/attribute";
 
+
+/**
+ * These rows seems to be tiny versions of the entity
+ * Pojos only used to indicate the important parts
+ * for a load event.
+ */
+
 interface EntityChange {
     entityId: string;
     entityName: string;
@@ -68,6 +75,10 @@ export class LoadResults {
     getOptionNames(): string[];
     addAttachmentRow(attachment: AttachmentRow): void;
     getAttachmentRows(): AttachmentRow[];
+    /**
+     * @returns {boolean} true if there are changes which could affect the attributes (including inherited ones)
+     *          notably changes in note itself should not have any effect on attributes
+     */
     hasAttributeRelatedChanges(): boolean;
     isEmpty(): boolean;
     isEmptyForTree(): boolean;

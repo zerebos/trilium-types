@@ -17,24 +17,29 @@ interface PojoState {
     viewScope: object
 }
 
+interface ViewScope {
+    viewMode?: "default" | "source";
+    readOnlyTemporarilyDisabled?: boolean;
+    attachmentId?: string;
+}
+
 export interface NoteContext extends Component {
-    new(ntxId?: string, hoistedNoteId?: string, mainNtxId?: string|null): NoteContext;
-    ntxId: string;
-    hoisedNoteId: string;
-    mainNtxId: string;
-    viewScope: object;
-    readonly note: Note|null;
+    new(ntxId?: string, hoistedNoteId?: string, mainNtxId?: string | null): NoteContext;
+    readonly ntxId: string;
+    readonly hoisedNoteId: string;
+    readonly mainNtxId: string;
+    readonly viewScope: ViewScope;
+    readonly note: Note | null;
     readonly notePathArray: string[];
     generateNtxId(): string;
     setEmpty(): void;
     isEmpty(): boolean;
     setNote(inputNotePath: string, opts?: object): Promise<void>;
-    resolveNotePath(): Promise<void>;
     getSubContexts(): NoteContext[];
     isMainContext(): boolean;
     getMainContext(): NoteContext;
     saveToRecentNotes(resolvedNotePath: string): void;
-    getResolvedNotePath(inputNotePath: string): Promise<void>;
+    getResolvedNotePath(inputNotePath: string): Promise<string | undefined>;
     isActive(): boolean;
     getPojoState(): PojoState;
     unhoist(): Promise<void>;

@@ -8,20 +8,24 @@ import {BasicWidget} from "./widgets/basic";
 import {NoteDetailWidget} from "./widgets/notedetail";
 import {RightPanelWidget} from "./widgets/rightpanel";
 import {NoteContextAwareWidget} from "./widgets/notecontextaware";
-// import {BasicWidget, NoteDetailWidget, RightPanelWidget, NoteContextAwareWidget} from "./widgets";
 
 declare global {
     const api: FrontendScriptApi;
-    // const $: JQueryStatic;
-    // const jQuery: JQueryStatic;
 }
+
+// type NotePath = string;
+// type NoteID = string;
+
+type ISODateFormat = `${number}-${number}-${number}`;  // 'YYYY-MM-DD'
+type MonthFormat = `${number}-${number}`;  // 'YYYY-MM-DD'
+
 
 /**
  * <p>This is the main frontend API interface for scripts. All the properties and methods are published in the "api" object
  * available in the JS frontend notes. You can use e.g. <code>api.showMessage(api.startNote.title);</code></p>
  */
 export default class FrontendScriptApi {
-    new (): FrontendScriptApi;
+    new(startNote: Note, currentNote: Note, originEntity?: any, $container?: JQuery): FrontendScriptApi;
     /**
      * Container of all the rendered script content
      */
@@ -75,6 +79,8 @@ export default class FrontendScriptApi {
      *                          ID is optional because of BC, but not specifying it is deprecated. ID can be alphanumeric only.
      * @param [opts.icon] - name of the boxicon to be used (e.g. "time" for "bx-time" icon)
      * @param [opts.shortcut] - keyboard shortcut for the button, e.g. "alt+t"
+     * @deprecated you can now create/modify launchers in the top-left Menu -> Configure Launchbar
+     *             for special needs there's also backend API's createOrUpdateLauncher()
      */
     addButtonToToolbar(opts: {
         title: string;
@@ -90,7 +96,7 @@ export default class FrontendScriptApi {
      * @param params - list of parameters to the anonymous function to be sent to backend
      * @returns return value of the executed function on the backend
      */
-    runOnBackend(script: CallableFunction, params: any[]): Promise<any>;
+    runOnBackend<Func extends (...args: any[]) => any>(script: Func, params: Parameters<Func>): Promise<ReturnType<Func>>;
     /**
      * This is a powerful search method - you can search by attributes and their values, e.g.:
      * "#dateModified =* MONTH AND #log". See full documentation for all options at: https://github.com/zadam/trilium/wiki/Search
@@ -126,7 +132,7 @@ export default class FrontendScriptApi {
     /**
      * @returns date in YYYY-MM-DD format
      */
-    formatDateISO(date: Date): string;
+    formatDateISO(date: Date): ISODateFormat;
     /**
      * @returns parsed object
      */
@@ -147,6 +153,7 @@ export default class FrontendScriptApi {
      * Trigger event. This is a very low-level API which should be avoided if possible.
      */
     triggerEvent(name: string, data: any): void;
+    
     /**
      * Create a note link (jQuery object) for given note.
      * @param notePath - (or noteId)
@@ -161,7 +168,17 @@ export default class FrontendScriptApi {
         showNoteIcon?: boolean;
         title?: string;
     }): void;
-    createNoteLink: any;
+
+    /**
+     * Create a note link (jQuery object) for given note.
+     * @param notePath - (or noteId)
+     * @param [params.showTooltip = true] - enable/disable tooltip on the link
+     * @param [params.showNotePath = false] - show also whole note's path as part of the link
+     * @param [params.showNoteIcon = false] - show also note icon before the title
+     * @param [params.title] - custom link tile with note's title as default
+     * @deprecated - use createLink
+     */
+    createNoteLink: typeof this.createLink;
     /**
      * Adds given text to the editor cursor
      * @param text - this must be clear text, HTML is not supported.
@@ -198,7 +215,7 @@ export default class FrontendScriptApi {
     /**
      * @param $el - jquery object on which to set up the tooltip
      */
-    setupElementTooltip($el: any): Promise<void>;
+    setupElementTooltip($el: JQuery): Promise<void>;
     /**
      * @param protect - true to protect note, false to unprotect
      */
@@ -215,22 +232,22 @@ export default class FrontendScriptApi {
      * Returns day note for a given date. If it doesn't exist, it is automatically created.
      * @param date - e.g. "2019-04-29"
      */
-    getDayNote(date: string): Promise<Note>;
+    getDayNote(date: ISODateFormat): Promise<Note>;
     /**
      * Returns day note for the first date of the week of the given date. If it doesn't exist, it is automatically created.
      * @param date - e.g. "2019-04-29"
      */
-    getWeekNote(date: string): Promise<Note>;
+    getWeekNote(date: ISODateFormat): Promise<Note>;
     /**
      * Returns month-note. If it doesn't exist, it is automatically created.
      * @param month - e.g. "2019-04"
      */
-    getMonthNote(month: string): Promise<Note>;
+    getMonthNote(month: MonthFormat): Promise<Note>;
     /**
      * Returns year-note. If it doesn't exist, it is automatically created.
      * @param year - e.g. "2019"
      */
-    getYearNote(year: string): Promise<Note>;
+    getYearNote(year: string | number): Promise<Note>;
     /**
      * Hoist note in the current tab. See https://github.com/zadam/trilium/wiki/Note-hoisting
      * @param noteId - set hoisted note. 'root' will effectively unhoist
@@ -241,7 +258,7 @@ export default class FrontendScriptApi {
      * @param [namespace] - specify namespace of the handler for the cases where call for bind may be repeated.
      *                               If a handler with this ID exists, it's replaced by the new handler.
      */
-    bindGlobalShortcut(keyboardShortcut: string, handler: (...params: any[]) => any, namespace?: string): Promise<void>;
+    bindGlobalShortcut<Func extends (...args: any[]) => any>(keyboardShortcut: string, handler: Func, namespace?: string): Promise<void>;
     /**
      * Trilium runs in a backend and frontend process, when something is changed on the backend from a script,
      * frontend will get asynchronously synchronized.
@@ -254,7 +271,7 @@ export default class FrontendScriptApi {
      * This will refresh all currently opened notes which have included note specified in the parameter
      * @param includedNoteId - noteId of the included note
      */
-    refreshIncludedNote(includedNoteId: any): Promise<void>;
+    refreshIncludedNote(includedNoteId: string): Promise<void>;
     /**
      * Return randomly generated string of given length. This random string generation is NOT cryptographically secure.
      * @param length - of the string
@@ -269,6 +286,7 @@ export default class FrontendScriptApi {
     /**
      * @param size - in bytes
      * @returns formatted string
+     * @deprecated - use formatSize()
      */
     formatNoteSize(size: integer): string;
     /**

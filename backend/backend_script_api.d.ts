@@ -4,11 +4,11 @@ import {Axios} from "axios";
 import * as xmljs from "xml2js";
 
 
-declare global {
-    const api: BackendScriptApi;
+// declare global {
+    // const api: BackendScriptApi;
     // const $: JQueryStatic;
     // const jQuery: JQueryStatic;
-}
+// }
 
 
 /**
