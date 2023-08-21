@@ -4,17 +4,28 @@ import {AbstractBeccaEntity} from "./base";
 import {Note} from "./note";
 
 
-export class Branch extends AbstractBeccaEntity {
+interface BranchPojo {
     branchId: string;
     noteId: string;
     parentNoteId: string;
-    prefix: string | null;
-    notePosition: integer
+    prefix: string;
+    notePosition: integer;
     isExpanded: boolean;
+    isDeleted?: boolean;
     utcDateModified: string;
-    childNote: any;
+}
+
+export interface Branch extends AbstractBeccaEntity<BranchPojo>, BranchPojo {
+    readonly entityName: "branches";
+    readonly primaryKeyName: "branchId";
+    readonly hashedProperties: ["branchId", "noteId", "parentNoteId", "prefix"];
+    new(row: BranchPojo): Branch;
+    updateFromRow(row: BranchPojo): void;
+    init(): void;
+    readonly childNote: Note;
     getNote(): Note;
-    parentNote: any;
+    readonly parentNote: Note;
+    readonly isDeleted?: boolean;
     /**
      * Branch is weak when its existence should not hinder deletion of its note.
      * As a result, note with only weak branches should be immediately deleted.
@@ -22,30 +33,12 @@ export class Branch extends AbstractBeccaEntity {
      * not as user-intended actions. From user perspective, they don't count as real clones and for the purpose
      * of deletion should not act as a clone.
      */
-    isWeak: any;
+    readonly isWeak: boolean;
     /**
      * Delete a branch. If this is a last note's branch, delete the note as well.
      * @param [deleteId] - optional delete identified
      * @returns - true if note has been deleted, false otherwise
      */
     deleteBranch(deleteId?: string, taskContext?: TaskContext): boolean;
-    protected beforeSaving(): void;
-    protected generateIdIfNecessary(): void;
-    protected generateHash(): void;
-    protected getUtcDateChanged(): void;
-    protected becca: any;
-    protected putEntityChange(): void;
-    protected getPojoToSave(): void;
-    /**
-     * Saves entity - executes SQL, but doesn't commit the transaction on its own
-     */
-    save(): this;
-    protected _setContent(): void;
-    protected _getContent(): string | Buffer;
-    /**
-     * Mark the entity as (soft) deleted. It will be completely erased later.
-     *
-     * This is a low-level method, for notes and branches use `note.deleteNote()` and 'branch.deleteBranch()` instead.
-     */
-    markAsDeleted(deleteId?: any): void;
+    createClone(parentNoteId: string, notePosition: integer): Branch;
 }

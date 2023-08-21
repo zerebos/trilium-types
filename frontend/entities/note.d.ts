@@ -3,18 +3,8 @@ import {Attachment} from "./attachment";
 import {Branch} from "./branch";
 import {Blob} from "./blob";
 import {Attribute, Label, Relation} from "./attribute";
+import {NoteType, NotePathRecord, ScriptEnvironment} from "../../common";
 
-
-type NoteType = "text" | "code" | "file" | "render";
-type ScriptEnvironment = "frontend" | "backend" | null;
-
-interface NotePathRecord {
-    isArchived: boolean;
-    isInHoistedSubTree: boolean;
-    isSearch: boolean;
-    notePath: string[];
-    isHidden: boolean;
-}
 
 type BranchPath = Record<string, string>;
 

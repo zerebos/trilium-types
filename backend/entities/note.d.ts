@@ -1,13 +1,14 @@
-import {integer} from "../../common";
+import dayjs from "dayjs";
+import {NotePathRecord, integer} from "../../common";
 import {TaskContext} from "../taskcontext";
 import {AbstractBeccaEntity} from "./base";
 import {Branch} from "./branch";
-import {Attribute} from "./attribute";
+import {Attribute, Label, Relation} from "./attribute";
 import {Attachment} from "./attachment";
 import {Revision} from "./revision";
 
 
-export class Note extends AbstractBeccaEntity {
+interface NotePojo {
     noteId: string;
     title: string;
     type: string;
@@ -18,6 +19,19 @@ export class Note extends AbstractBeccaEntity {
     dateModified: string;
     utcDateCreated: string;
     utcDateModified: string;
+    isDeleted?: boolean;
+}
+
+export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
+    readonly entityName: "attributes";
+    readonly primaryKeyName: "attributeId";
+    readonly hashedProperties: ["attributeId", "noteId", "type", "name", "value", "isInheritable"];
+    new(row: NotePojo): Note;
+    updateFromRow(row: NotePojo): void;
+    init(): void;
+    isContentAvailable(): boolean;
+    getTitleOrProtected(): boolean;
+
     /**
      * - set during the deletion operation, before it is completed (removed from becca completely)
      */
@@ -35,8 +49,8 @@ export class Note extends AbstractBeccaEntity {
     hasChildren(): boolean;
     getChildBranches(): Branch[];
     getContent(): string | Buffer;
-    getContentMetadata(): any;
-    getJsonContent(): any;
+    getContentMetadata(): {dateModified: string, utcDateModified: string};
+    getJsonContent(): Record<string, any>;
     /**
      * @param [opts.forceSave = false] - will also save this Note entity
      * @param [opts.forceFrontendReload = false] - override frontend heuristics on when to reload, instruct to reload
@@ -45,6 +59,12 @@ export class Note extends AbstractBeccaEntity {
         forceSave?: any;
         forceFrontendReload?: any;
     }): void;
+
+    setJsonContent(content: Record<string, any>): void;
+    readonly dateCreatedObj: ReturnType<typeof dayjs>;
+    readonly utcDateCreatedObj: ReturnType<typeof dayjs>;
+    readonly dateModifiedObj: ReturnType<typeof dayjs>;
+    readonly utcDateModifiedObj: ReturnType<typeof dayjs>;
     /**
      * @returns true if this note is the root of the note tree. Root note has "root" noteId
      */
@@ -65,7 +85,10 @@ export class Note extends AbstractBeccaEntity {
      * @returns true if this note is an image
      */
     isImage(): boolean;
-    isStringNote(): void;
+    /**
+     * @deprecated use hasStringContent()
+     */
+    isStringNote(): boolean;
     /**
      * @returns true if the note has string content (not binary)
      */
@@ -83,6 +106,8 @@ export class Note extends AbstractBeccaEntity {
      */
     getAttributes(type?: string, name?: string): Attribute[];
     hasAttribute(type: any, name: any, value?: any): boolean;
+    getAttributeCaseInsensitive(type: string, name: string, value: string): Attribute;
+    getRelationTarget(name: string): Note;
     /**
      * @param name - label name
      * @param [value] - label value
@@ -116,22 +141,22 @@ export class Note extends AbstractBeccaEntity {
      * @param name - label name
      * @returns label if it exists, null otherwise
      */
-    getLabel(name: string): Attribute | null;
+    getLabel(name: string): Label | null;
     /**
      * @param name - label name
      * @returns label if it exists, null otherwise
      */
-    getOwnedLabel(name: string): Attribute | null;
+    getOwnedLabel(name: string): Label | null;
     /**
      * @param name - relation name
      * @returns relation if it exists, null otherwise
      */
-    getRelation(name: string): Attribute | null;
+    getRelation(name: string): Relation | null;
     /**
      * @param name - relation name
      * @returns relation if it exists, null otherwise
      */
-    getOwnedRelation(name: string): Attribute | null;
+    getOwnedRelation(name: string): Relation | null;
     /**
      * @param name - label name
      * @returns label value if label exists, null otherwise
@@ -182,7 +207,7 @@ export class Note extends AbstractBeccaEntity {
      * @param [name] - label name to filter
      * @returns all note's labels (attributes with type label), including inherited ones
      */
-    getLabels(name?: string): Attribute[];
+    getLabels(name?: string): Label[];
     /**
      * @param [name] - label name to filter
      * @returns all note's label values, including inherited ones
@@ -192,7 +217,7 @@ export class Note extends AbstractBeccaEntity {
      * @param [name] - label name to filter
      * @returns all note's labels (attributes with type label), excluding inherited ones
      */
-    getOwnedLabels(name?: string): Attribute[];
+    getOwnedLabels(name?: string): Label[];
     /**
      * @param [name] - label name to filter
      * @returns all note's label values, excluding inherited ones
@@ -202,12 +227,12 @@ export class Note extends AbstractBeccaEntity {
      * @param [name] - relation name to filter
      * @returns all note's relations (attributes with type relation), including inherited ones
      */
-    getRelations(name?: string): Attribute[];
+    getRelations(name?: string): Relation[];
     /**
      * @param [name] - relation name to filter
      * @returns all note's relations (attributes with type relation), excluding inherited ones
      */
-    getOwnedRelations(name?: string): Attribute[];
+    getOwnedRelations(name?: string): Relation[];
     /**
      * Beware that the method must not create a copy of the array, but actually returns its internal array
      * (for performance reasons)
@@ -222,7 +247,12 @@ export class Note extends AbstractBeccaEntity {
      *
      * This method can be significantly faster than the getAttribute()
      */
-    getOwnedAttribute(): Attribute;
+    getOwnedAttribute(type: string, name: string, value?: string): Attribute;
+    readonly isArchived: boolean;
+    areAllNotePathsArchived(): boolean;
+    hasInheritableArchivedLabel(): boolean;
+    sortParents(): void;
+    sortChildren(): void;
     /**
      * This is used for:
      * - fast searching
@@ -230,33 +260,52 @@ export class Note extends AbstractBeccaEntity {
      * @returns - returns flattened textual representation of note, prefixes and attributes
      */
     getFlatText(): string;
+    invalidateThisCache(): void;
+    invalidateSubTree(path: ReadonlyArray<string>): void;
+    getRelationDefinition(): object;
+    getLabelDefinition(): object;
+    isInherited(): boolean;
     getSubtreeNotesIncludingTemplated(): Note[];
     getSearchResultNotes(): Note[];
-    getSubtree(): any;
+    getSubtree(): {notes: Note[], relationships: Array<{parentNoteId: string, childNoteId: string}>};
     /**
      * @returns - includes the subtree root note as well
      */
     getSubtreeNoteIds(): string[];
     getDescendantNoteIds(): void;
+    readonly parentCount: integer;
+    readonly childrenCount: integer;
+    readonly labelCount: integer;
+    readonly ownedLabelCount: integer;
+    readonly relationCount: integer;
+    readonly relationCountIncludingLinks: integer;
+    readonly ownedRelationCount: integer;
+    readonly ownedRelationCountIncludingLinks: integer;
+    readonly targetRelationCount: integer;
+    readonly targetRelationCountIncludingLinks: integer;
+    readonly attributeCount: integer;
+    readonly ownedAttributeCount: integer;
     getAncestors(): Note[];
     getAncestorNoteIds(): string[];
     hasAncestor(): boolean;
-    getTargetRelations(): Attribute[];
+    isInHiddenSubtree(): boolean;
+    getTargetRelations(): Relation[];
     /**
      * @returns - returns only notes which are templated, does not include their subtrees
      *                     in effect returns notes which are influenced by note's non-inheritable attributes
      */
     getInheritingNotes(): Note[];
+    getDistanceToAncestor(ancestorNoteId: string): integer;
     getRevisions(): Revision[];
-    getAttachments(): Attachment[];
-    getAttachmentById(): Attachment | null;
-    getAttachmentByRole(): Attachment[];
+    getAttachments({includeContentLength}?: {includeContentLength: boolean}): Attachment[];
+    getAttachmentById(attachmentId: string, {includeContentLength}?: {includeContentLength: boolean}): Attachment | null;
+    getAttachmentByRole(role: string): Attachment[];
     /**
      * Gives all possible note paths leading to this note. Paths containing search note are ignored (could form cycles)
      * @returns - array of notePaths (each represented by array of noteIds constituting the particular note path)
      */
     getAllNotePaths(): string[][];
-    getSortedNotePathRecords(hoistedNoteId?: string): { isArchived: boolean; isInHoistedSubTree: boolean; notePath: string[]; isHidden: boolean; }[];
+    getSortedNotePathRecords(hoistedNoteId?: string): NotePathRecord[];
     /**
      * Returns a note path considered to be the "best"
      * @returns array of noteIds constituting the particular note path
@@ -270,11 +319,11 @@ export class Note extends AbstractBeccaEntity {
     /**
      * @returns boolean - true if there's no non-hidden path, note is not cloned to the visible tree
      */
-    isHiddenCompletely(): any;
+    isHiddenCompletely(): boolean;
     /**
      * @returns - true if ancestorNoteId occurs in at least one of the note's paths
      */
-    isDescendantOfNote(ancestorNoteId: any): boolean;
+    isDescendantOfNote(ancestorNoteId: string): boolean;
     /**
      * Update's given attribute's value or creates it if it doesn't exist
      * @param type - attribute type (label, relation, etc.)
@@ -302,13 +351,13 @@ export class Note extends AbstractBeccaEntity {
      * @param name - name of the label, not including the leading #
      * @param [value] - text value of the label; optional
      */
-    addLabel(name: string, value?: string, isInheritable?: boolean): Attribute;
+    addLabel(name: string, value?: string, isInheritable?: boolean): Label;
     /**
      * Adds a new relation to this note. The relation attribute is saved and
      * returned.
      * @param name - name of the relation, not including the leading ~
      */
-    addRelation(name: string, targetNoteId: string, isInheritable?: boolean): Attribute;
+    addRelation(name: string, targetNoteId: string, isInheritable?: boolean): Relation;
     /**
      * Based on enabled, the attribute is either set or removed.
      * @param type - attribute type ('relation', 'label' etc.)
@@ -355,7 +404,10 @@ export class Note extends AbstractBeccaEntity {
      * @param [value] - relation value (noteId)
      */
     removeRelation(name: string, value?: string): void;
+    searchNotesInSubtree(searchString: string): any[];
+    searchNoteInSubtree(searchString: string): any;
     cloneTo(parentNoteId: any): any;
+    isEligibleForConversionToAttachment(): boolean;
     /**
      * Some notes are eligible for conversion into an attachment of its parent, note must have these properties:
      * - it has exactly one target relation
@@ -370,31 +422,17 @@ export class Note extends AbstractBeccaEntity {
      * In the future, this functionality might get more generic and some of the requirements relaxed.
      * @returns - null if note is not eligible for conversion
      */
-    convertToParentAttachment(): Attachment | null;
+    convertToParentAttachment({autoConversion}?: {autoConversion: boolean}): Attachment | null;
     /**
      * (Soft) delete a note and all its descendants.
      * @param [deleteId = null] - optional delete identified
      */
     deleteNote(deleteId?: string, taskContext?: TaskContext): void;
+    decrypt(): void;
+    isLauncherBarConfig(): boolean;
+    isOptions(): boolean;
+    readonly isDeleted: boolean;
     saveRevision(): Revision | null;
     saveAttachment(): Attachment;
-    protected beforeSaving(): void;
-    protected generateIdIfNecessary(): void;
-    protected generateHash(): void;
-    protected getUtcDateChanged(): void;
-    protected becca: any;
-    protected putEntityChange(): void;
-    protected getPojoToSave(): void;
-    /**
-     * Saves entity - executes SQL, but doesn't commit the transaction on its own
-     */
-    save(): this;
-    protected _setContent(): void;
-    protected _getContent(): string | Buffer;
-    /**
-     * Mark the entity as (soft) deleted. It will be completely erased later.
-     *
-     * This is a low-level method, for notes and branches use `note.deleteNote()` and 'branch.deleteBranch()` instead.
-     */
-    markAsDeleted(deleteId?: any): void;
+    getFileName(): string;
 }

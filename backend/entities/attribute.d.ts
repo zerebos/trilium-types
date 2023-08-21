@@ -1,37 +1,46 @@
-import {integer} from "../../common";
+import {LabelAttributeType, RelationAttributeType, integer} from "../../common";
 import {AbstractBeccaEntity} from "./base";
 import {Note} from "./note";
 
 
-export class Attribute extends AbstractBeccaEntity {
+interface AttributePojo {
     attributeId: string;
     noteId: string;
     type: string;
     name: string;
-    position: integer
+    position: integer;
     value: string;
     isInheritable: boolean;
     utcDateModified: string;
+    isDeleted?: boolean;
+}
+
+export interface Attribute extends AbstractBeccaEntity<AttributePojo>, AttributePojo {
+    readonly entityName: "attributes";
+    readonly primaryKeyName: "attributeId";
+    readonly hashedProperties: ["attributeId", "noteId", "type", "name", "value", "isInheritable"];
+    new(row: AttributePojo): Attribute;
+    updateFromRow(row: AttributePojo): void;
+    init(): void;
+    validate(): void;
+    readonly isAffectingSubtree: boolean;
+    readonly targetNoteId: string;
+    isAutoLink(): boolean;
+    readonly note: Note;
+    readonly targetNote: Note;
     getNote(): Note | null;
     getTargetNote(): Note | null;
     isDefinition(): boolean;
-    protected beforeSaving(): void;
-    protected generateIdIfNecessary(): void;
-    protected generateHash(): void;
-    protected getUtcDateChanged(): void;
-    protected becca: any;
-    protected putEntityChange(): void;
-    protected getPojoToSave(): void;
-    /**
-     * Saves entity - executes SQL, but doesn't commit the transaction on its own
-     */
-    save(): this;
-    protected _setContent(): void;
-    protected _getContent(): string | Buffer;
-    /**
-     * Mark the entity as (soft) deleted. It will be completely erased later.
-     *
-     * This is a low-level method, for notes and branches use `note.deleteNote()` and 'branch.deleteBranch()` instead.
-     */
-    markAsDeleted(deleteId?: any): void;
+    getDefinition(): object;
+    getDefinedName(): string;
+    readonly isDeleted: boolean;
+    createClone(type: string, name: string, value: string, isInheritable: boolean): Attribute;
+}
+
+export interface Label extends Attribute {
+    type: LabelAttributeType;
+}
+
+export interface Relation extends Attribute {
+    type: RelationAttributeType;
 }

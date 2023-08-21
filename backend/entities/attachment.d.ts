@@ -1,9 +1,10 @@
 import {integer} from "../../common";
 import {AbstractBeccaEntity} from "./base";
 import {Note} from "./note";
+import {Branch} from "./branch";
 
 
-export class Attachment extends AbstractBeccaEntity {
+interface AttachmentPojo {
     attachmentId: string;
     /**
      * either noteId or revisionId to which this attachment belongs
@@ -12,22 +13,35 @@ export class Attachment extends AbstractBeccaEntity {
     role: string;
     mime: string;
     title: string;
-    position: integer
+    position: integer;
     blobId: string;
     isProtected: boolean;
+    isDeleted?: boolean;
     dateModified: string;
     utcDateModified: string;
     utcDateScheduledForErasureSince: string;
     /**
      * optionally added to the entity
      */
-    contentLength: integer
+    contentLength?: integer;
+}
+
+
+export interface Attachment extends AbstractBeccaEntity<AttachmentPojo>, AttachmentPojo {
+    readonly entityName: "attachments";
+    readonly primaryKeyName: "attachmentId";
+    readonly hashedProperties: ["attachmentId", "ownerId", "role", "mime", "title", "blobId",
+                       "utcDateScheduledForErasureSince", "utcDateModified"];
+    new(row: AttachmentPojo): Attachment;
     copy(): Attachment;
     getNote(): Note;
     /**
      * @returns true if the note has string content (not binary)
      */
     hasStringContent(): boolean;
+    isContentAvailable(): boolean;
+    getTitleOrProtected(): string;
+    decrypt(): void;
     getContent(): string | Buffer;
     /**
      * @param [opts.forceSave = false] - will also save this BAttachment entity
@@ -37,24 +51,6 @@ export class Attachment extends AbstractBeccaEntity {
         forceSave?: any;
         forceFrontendReload?: any;
     }): void;
-    convertToNote(): any;
-    protected beforeSaving(): void;
-    protected generateIdIfNecessary(): void;
-    protected generateHash(): void;
-    protected getUtcDateChanged(): void;
-    protected becca: any;
-    protected putEntityChange(): void;
-    protected getPojoToSave(): void;
-    /**
-     * Saves entity - executes SQL, but doesn't commit the transaction on its own
-     */
-    save(): this;
-    protected _setContent(): void;
-    protected _getContent(): string | Buffer;
-    /**
-     * Mark the entity as (soft) deleted. It will be completely erased later.
-     *
-     * This is a low-level method, for notes and branches use `note.deleteNote()` and 'branch.deleteBranch()` instead.
-     */
-    markAsDeleted(deleteId?: any): void;
+    convertToNote(): {note: Note, branch: Branch};
+    getFilename(): string;
 }

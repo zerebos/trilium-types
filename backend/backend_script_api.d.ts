@@ -28,7 +28,7 @@ export default class BackendScriptApi {
     /**
      * Entity whose event triggered this execution
      */
-    originEntity: AbstractBeccaEntity;
+    originEntity: AbstractBeccaEntity<unknown>;
     /**
      * Axios library for HTTP requests. See {@link https://axios-http.com} for documentation
      */

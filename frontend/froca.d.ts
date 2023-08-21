@@ -1,8 +1,7 @@
-import {integer} from "../common";
 import {Attachment, AttachmentPojo} from "./entities/attachment";
 import {Branch, BranchPojo} from "./entities/branch";
 import {Blob} from "./entities/blob";
-import {Attribute, AttributePojo, AttributeType} from "./entities/attribute";
+import {Attribute, AttributePojo} from "./entities/attribute";
 import {Note, NotePojo} from "./entities/note";
 
 

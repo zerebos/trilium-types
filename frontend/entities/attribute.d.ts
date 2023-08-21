@@ -1,12 +1,8 @@
-import {integer} from "../../common";
+import {integer, AttributeType, LabelAttributeType, RelationAttributeType} from "../../common";
 
 import {Froca} from "../froca";
 import {Note} from "./note";
 
-
-type LabelType = "label";
-type RelationType = "label";
-type AttributeType = LabelType | RelationType
 
 export interface AttributePojo {
     attributeId: string;
@@ -27,9 +23,9 @@ export interface Attribute extends AttributePojo {
 }
 
 export interface Label extends Attribute {
-    type: LabelType;
+    type: LabelAttributeType;
 }
 
 export interface Relation extends Attribute {
-    type: RelationType;
+    type: RelationAttributeType;
 }
