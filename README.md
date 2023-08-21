@@ -10,6 +10,8 @@ npm install @types/trilium@github:rauenzi/trilium-types
 
 ## Usage
 
+**Please note:** These types were made for the *latest* version of Trilium (v0.61) which adds the attachments feature. If you're developing for the stable release (v0.60) you can still use these types, just avoid or ignore anything related to attachments.
+
 ### TypeScript
 
 The Trilium frontend `api` will automatically be available in all files since working with the frontend is the most common use-case. You can easily override this with the backend api if needed:

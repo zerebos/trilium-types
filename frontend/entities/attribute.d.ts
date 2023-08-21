@@ -20,6 +20,13 @@ export interface Attribute extends AttributePojo {
     update(row: AttributePojo): void;
     getNote(): Note;
     getTargetNote(): Promise<Note>;
+    readonly targetNoteId: string;
+    readonly isAutoLink: boolean;
+    readonly toString: string;
+    isDefinition(): boolean;
+    getDefinition(): object;
+    isDefinitionFor({type, name}: {type: AttributeType, name: string}): boolean;
+    readonly dto: AttributePojo;
 }
 
 export interface Label extends Attribute {

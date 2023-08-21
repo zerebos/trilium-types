@@ -7,7 +7,9 @@ export type LabelAttributeType = "label";
 export type RelationAttributeType = "label";
 export type AttributeType = LabelAttributeType | RelationAttributeType
 
-export type NoteType = "text" | "code" | "file" | "render";
+export type NoteType = "file" | "image" | "search" | "noteMap" | "launcher" |
+                       "doc" | "contentWidget" | "text" | "relationMap" |
+                       "render" | "canvas" | "mermaid" | "book" | "webView" | "code";
 export type ScriptEnvironment = "frontend" | "backend" | null;
 
 export interface NotePathRecord {
