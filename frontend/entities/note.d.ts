@@ -3,7 +3,7 @@ import {Attachment} from "./attachment";
 import {Branch} from "./branch";
 import {Blob} from "./blob";
 import {Attribute, Label, Relation} from "./attribute";
-import {NoteType, NotePathRecord, ScriptEnvironment} from "../../common";
+import {NoteType, NotePathRecord, ScriptEnvironment, AttributeType} from "../../common";
 
 
 type BranchPath = Record<string, string>;
@@ -130,37 +130,37 @@ export interface Note extends NotePojo {
      * @param name - attribute name
      * @returns true if note has an attribute with given type and name (including inherited)
      */
-    hasAttribute(type: string, name: string): boolean;
+    hasAttribute(type: AttributeType, name: string): boolean;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns true if note has an attribute with given type and name (including inherited)
      */
-    hasOwnedAttribute(type: string, name: string): boolean;
+    hasOwnedAttribute(type: AttributeType, name: string): boolean;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute of the given type and name. If there are more such attributes, first is returned. Returns null if there's no such attribute belonging to this note.
      */
-    getOwnedAttribute(type: string, name: string): Attribute | null;
+    getOwnedAttribute(type: AttributeType, name: string): Attribute | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute of the given type and name. If there are more such attributes, first is returned. Returns null if there's no such attribute belonging to this note.
      */
-    getAttribute(type: string, name: string): Attribute | null;
+    getAttribute(type: AttributeType, name: string): Attribute | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of the given type and name or null if no such attribute exists.
      */
-    getOwnedAttributeValue(type: string, name: string): string | null;
+    getOwnedAttributeValue(type: AttributeType, name: string): string | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of the given type and name or null if no such attribute exists.
      */
-    getAttributeValue(type: string, name: string): string | null;
+    getAttributeValue(type: AttributeType, name: string): string | null;
     /**
      * @param name - label name
      * @returns true if label exists (excluding inherited)

@@ -17,3 +17,7 @@ export interface NotePathRecord {
     notePath: string[];
     isHidden: boolean;
 }
+
+export type LauncherType = "note" | "script" | "customWidget";
+export type BlobEntityType = "notes" | "attachments";
+export type TaskType = "deleteNotes" | "undeleteNotes" | "importNotes" | "importAttachments" | "protectNotes" | "export"

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {integer} from "../common";
+import {AttributeType, NoteType, LauncherType, integer} from "../common";
 import {Axios} from "axios";
 import * as xmljs from "xml2js";
 
@@ -107,7 +107,7 @@ export default class BackendScriptApi {
         parentNoteId: string;
         title: string;
         content: string | Buffer;
-        type: string;
+        type: NoteType;
         mime?: string;
         isProtected?: boolean;
         isExpanded?: boolean;
@@ -132,7 +132,7 @@ export default class BackendScriptApi {
         type?: string;
         mime?: string;
         attributes?: {
-            type: string;
+            type: AttributeType;
             name: string;
             value?: string;
         }[];
@@ -241,7 +241,7 @@ export default class BackendScriptApi {
      */
     createOrUpdateLauncher(opts: {
         id: string;
-        type: string;
+        type: LauncherType;
         title: string;
         isVisible?: boolean;
         icon?: string;

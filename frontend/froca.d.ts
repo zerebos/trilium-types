@@ -1,3 +1,4 @@
+import {BlobEntityType} from "../common";
 import {Attachment, AttachmentPojo} from "./entities/attachment";
 import {Branch, BranchPojo} from "./entities/branch";
 import {Blob} from "./entities/blob";
@@ -35,5 +36,5 @@ export interface Froca {
     getAttachment(attachmentId: string, silentNotFoundError?: boolean): Promise<Attachment>;
     getAttachmentsForNote(noteId: string): Promise<Attachment[]>;
     processAttachmentRows(attachmentRows: AttachmentPojo[]): Attachment[];
-    getBlob(entityType: string, entityId: string): Promise<Blob>;
+    getBlob(entityType: BlobEntityType, entityId: string): Promise<Blob>;
 }

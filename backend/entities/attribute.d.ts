@@ -1,4 +1,4 @@
-import {LabelAttributeType, RelationAttributeType, integer} from "../../common";
+import {AttributeType, LabelAttributeType, RelationAttributeType, integer} from "../../common";
 import {AbstractBeccaEntity} from "./base";
 import {Note} from "./note";
 
@@ -6,7 +6,7 @@ import {Note} from "./note";
 interface AttributePojo {
     attributeId: string;
     noteId: string;
-    type: string;
+    type: AttributeType;
     name: string;
     position: integer;
     value: string;
@@ -34,7 +34,7 @@ export interface Attribute extends AbstractBeccaEntity<AttributePojo>, Attribute
     getDefinition(): object;
     getDefinedName(): string;
     readonly isDeleted: boolean;
-    createClone(type: string, name: string, value: string, isInheritable: boolean): Attribute;
+    createClone(type: AttributeType, name: string, value: string, isInheritable: boolean): Attribute;
 }
 
 export interface Label extends Attribute {

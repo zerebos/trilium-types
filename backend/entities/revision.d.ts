@@ -1,4 +1,4 @@
-import {integer} from "../../common";
+import {NoteType, integer} from "../../common";
 import {AbstractBeccaEntity} from "./base";
 import {Attachment} from "./attachment";
 import {Note} from "./note";
@@ -7,7 +7,7 @@ import {Note} from "./note";
 interface RevisionPojo {
     revisionId: string;
     noteId: string;
-    type: string;
+    type: NoteType;
     mime: string;
     isProtected: boolean;
     title: string;

@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {NotePathRecord, integer} from "../../common";
+import {AttributeType, NotePathRecord, NoteType, integer} from "../../common";
 import {TaskContext} from "../taskcontext";
 import {AbstractBeccaEntity} from "./base";
 import {Branch} from "./branch";
@@ -11,7 +11,7 @@ import {Revision} from "./revision";
 interface NotePojo {
     noteId: string;
     title: string;
-    type: string;
+    type: NoteType;
     mime: string;
     isProtected: boolean;
     blobId: string;
@@ -106,7 +106,7 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      */
     getAttributes(type?: string, name?: string): Attribute[];
     hasAttribute(type: any, name: any, value?: any): boolean;
-    getAttributeCaseInsensitive(type: string, name: string, value: string): Attribute;
+    getAttributeCaseInsensitive(type: AttributeType, name: string, value: string): Attribute;
     getRelationTarget(name: string): Note;
     /**
      * @param name - label name
@@ -183,26 +183,26 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      * @param [value] - attribute value
      * @returns true if note has an attribute with given type and name (excluding inherited)
      */
-    hasOwnedAttribute(type: string, name: string, value?: string): boolean;
+    hasOwnedAttribute(type: AttributeType, name: string, value?: string): boolean;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute of the given type and name. If there are more such attributes, first is returned.
      *                       Returns null if there's no such attribute belonging to this note.
      */
-    getAttribute(type: string, name: string): Attribute;
+    getAttribute(type: AttributeType, name: string): Attribute;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of given type and name or null if no such attribute exists.
      */
-    getAttributeValue(type: string, name: string): string | null;
+    getAttributeValue(type: AttributeType, name: string): string | null;
     /**
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @returns attribute value of given type and name or null if no such attribute exists.
      */
-    getOwnedAttributeValue(type: string, name: string): string | null;
+    getOwnedAttributeValue(type: AttributeType, name: string): string | null;
     /**
      * @param [name] - label name to filter
      * @returns all note's labels (attributes with type label), including inherited ones
@@ -247,7 +247,7 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      *
      * This method can be significantly faster than the getAttribute()
      */
-    getOwnedAttribute(type: string, name: string, value?: string): Attribute;
+    getOwnedAttribute(type: AttributeType, name: string, value?: string): Attribute;
     readonly isArchived: boolean;
     areAllNotePathsArchived(): boolean;
     hasInheritableArchivedLabel(): boolean;
@@ -330,14 +330,14 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      * @param name - attribute name
      * @param [value] - attribute value (optional)
      */
-    setAttribute(type: string, name: string, value?: string): void;
+    setAttribute(type: AttributeType, name: string, value?: string): void;
     /**
      * Removes given attribute name-value pair if it exists.
      * @param type - attribute type (label, relation, etc.)
      * @param name - attribute name
      * @param [value] - attribute value (optional)
      */
-    removeAttribute(type: string, name: string, value?: string): void;
+    removeAttribute(type: AttributeType, name: string, value?: string): void;
     /**
      * Adds a new attribute to this note. The attribute is saved and returned.
      * See addLabel, addRelation for more specific methods.
@@ -345,7 +345,7 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      * @param name - name of the attribute, not including the leading ~/#
      * @param [value] - value of the attribute - text for labels, target note ID for relations; optional.
      */
-    addAttribute(type: string, name: string, value?: string, isInheritable?: boolean, position?: integer | null): Attribute;
+    addAttribute(type: AttributeType, name: string, value?: string, isInheritable?: boolean, position?: integer | null): Attribute;
     /**
      * Adds a new label to this note. The label attribute is saved and returned.
      * @param name - name of the label, not including the leading #
@@ -365,7 +365,7 @@ export interface Note extends AbstractBeccaEntity<NotePojo>, NotePojo {
      * @param name - attribute name
      * @param [value] - attribute value (optional)
      */
-    toggleAttribute(type: string, enabled: boolean, name: string, value?: string): void;
+    toggleAttribute(type: AttributeType, enabled: boolean, name: string, value?: string): void;
     /**
      * Based on enabled, label is either set or removed.
      * @param enabled - toggle On or Off
