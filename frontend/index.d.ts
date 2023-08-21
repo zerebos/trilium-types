@@ -1,5 +1,4 @@
-export {default as FrontendApi} from "./frontend_script_api";
-export {default as jQuery} from "jquery";
+export {default as FrontendAPI} from "./frontend_script_api";
 export {LoadResults} from "./loadresults"
 export {Component} from "./component";
 export {BasicWidget, NoteContextAwareWidget, NoteDetailWidget, RightPanelWidget, TypeWidget} from "./widgets";

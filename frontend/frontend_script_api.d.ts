@@ -2,12 +2,12 @@ import dayjs from "dayjs";
 import CodeMirror from "codemirror";
 import {BalloonEditor} from "@ckeditor/ckeditor5-editor-balloon";
 import {integer} from "../common";
-import {Note} from "./entities/note";
 import {Component} from "./component";
 import {BasicWidget} from "./widgets/basic";
 import {NoteDetailWidget} from "./widgets/notedetail";
 import {RightPanelWidget} from "./widgets/rightpanel";
 import {NoteContextAwareWidget} from "./widgets/notecontextaware";
+import {Attachment, Attribute, Blob, Branch, Note, NoteContext} from "./entities";
 
 declare global {
     const api: FrontendScriptApi;
@@ -18,6 +18,7 @@ declare global {
 
 type ISODateFormat = `${number}-${number}-${number}`;  // 'YYYY-MM-DD'
 type MonthFormat = `${number}-${number}`;  // 'YYYY-MM-DD'
+type Entity = Attachment | Attribute | Blob | Branch | NoteContext | Note;
 
 
 /**
@@ -41,7 +42,7 @@ export default class FrontendScriptApi {
     /**
      * Entity whose event triggered this execution
      */
-    originEntity: any | null;
+    originEntity: Entity | null;
     /**
      * day.js library for date manipulation.
      * See {@link https://day.js.org} for documentation
