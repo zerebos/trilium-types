@@ -1,6 +1,6 @@
 import {integer} from "../../common";
 
-import {Froca} from "./froca";
+import {Froca} from "../froca";
 import {Note} from "./note";
 
 

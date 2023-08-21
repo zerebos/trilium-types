@@ -1,4 +1,4 @@
-import {Froca} from "./froca";
+import {Froca} from "../froca";
 import {Attachment} from "./attachment";
 import {Branch} from "./branch";
 import {Blob} from "./blob";

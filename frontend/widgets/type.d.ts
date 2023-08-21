@@ -1,5 +1,5 @@
-import {Note} from "../notes/note";
-import {NoteContext} from "../notes/context";
+import {Note} from "../entities/note";
+import {NoteContext} from "../entities/context";
 
 import {NoteContextAwareWidget} from "./notecontextaware";
 

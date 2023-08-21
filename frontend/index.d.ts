@@ -3,4 +3,4 @@ export {default as jQuery} from "jquery";
 export {LoadResults} from "./loadresults"
 export {Component} from "./component";
 export {BasicWidget, NoteContextAwareWidget, NoteDetailWidget, RightPanelWidget, TypeWidget} from "./widgets";
-export {Note, Attachment, Attribute, Blob, Branch, NoteContext, Froca} from "./notes";
+export {Note, Attachment, Attribute, Blob, Branch, NoteContext, Froca} from "./entities";

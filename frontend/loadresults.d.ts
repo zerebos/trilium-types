@@ -1,4 +1,4 @@
-import {Attribute} from "./notes/attribute";
+import {Attribute} from "./entities/attribute";
 
 
 /**

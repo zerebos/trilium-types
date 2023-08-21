@@ -1,4 +1,4 @@
-import {NoteContext} from "../notes/context";
+import {NoteContext} from "../entities/context";
 
 import {NoteContextAwareWidget} from "./notecontextaware";
 import {TypeWidget} from "./type";

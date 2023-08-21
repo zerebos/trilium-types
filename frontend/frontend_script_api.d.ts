@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import CodeMirror from "codemirror";
 import {BalloonEditor} from "@ckeditor/ckeditor5-editor-balloon";
 import {integer} from "../common";
-import {Note} from "./notes/note";
+import {Note} from "./entities/note";
 import {Component} from "./component";
 import {BasicWidget} from "./widgets/basic";
 import {NoteDetailWidget} from "./widgets/notedetail";

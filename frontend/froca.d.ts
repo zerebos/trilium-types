@@ -1,9 +1,9 @@
-import {integer} from "../../common";
-import {Attachment, AttachmentPojo} from "./attachment";
-import {Branch, BranchPojo} from "./branch";
-import {Blob} from "./blob";
-import {Attribute, AttributePojo, AttributeType} from "./attribute";
-import {Note, NotePojo} from "./note";
+import {integer} from "../common";
+import {Attachment, AttachmentPojo} from "./entities/attachment";
+import {Branch, BranchPojo} from "./entities/branch";
+import {Blob} from "./entities/blob";
+import {Attribute, AttributePojo, AttributeType} from "./entities/attribute";
+import {Note, NotePojo} from "./entities/note";
 
 
 interface ServerResponse {
