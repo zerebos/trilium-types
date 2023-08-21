@@ -7,3 +7,4 @@ export {Option} from "./option";
 export {RecentNote} from "./recentnote";
 export {Revision} from "./revision";
 export {ETAPIToken} from "./token";
+export {Blob} from "./blob";
