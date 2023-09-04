@@ -5,7 +5,7 @@ A [TypeScript](https://www.typescriptlang.org/) `@types` package for [Trilium No
 ## Installation
 
 ```sh
-npm install @types/trilium@github:rauenzi/trilium-types
+npm install @types/trilium@npm:trilium-types
 ```
 
 ## Usage
@@ -44,10 +44,6 @@ Because it's nice to have autocompletion and type recognition whether you're usi
 ### Why not [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/)?
 
 I chose not to try to push this to DefinitelyTyped because I'm still an amateur when it comes to TypeScript and writing custom type definitions. They tend to have a quality requirement that I don't think I would meet.
-
-### Why not `npm`?
-
-This isn't published on `npm` for much of the same reason above, I'm not confident in my definitions enough for that.
 
 
 ## Links

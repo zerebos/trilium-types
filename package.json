@@ -1,12 +1,13 @@
 {
   "name": "trilium-types",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Type definitions for Trilium Notes.",
   "scripts": {
     "tsc": "tsc"
   },
   "author": "Zerebos",
   "license": "MIT",
+  "files": ["backend", "common", "frontend", "index.d.ts"],
   "devDependencies": {
     "typescript": "^5.1.6"
   },
