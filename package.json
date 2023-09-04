@@ -2,6 +2,12 @@
   "name": "trilium-types",
   "version": "0.1.0",
   "description": "Type definitions for Trilium Notes.",
+  "homepage": "https://github.com/rauenzi/trilium-types",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rauenzi/trilium-types.git"
+  },
+  "keywords": ["trilium", "notes", "types"],
   "scripts": {
     "tsc": "tsc"
   },
