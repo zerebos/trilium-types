@@ -168,7 +168,7 @@ export declare class FrontendScriptApi {
         showNotePath?: boolean;
         showNoteIcon?: boolean;
         title?: string;
-    }): void;
+    }): JQuery;
 
     /**
      * Create a note link (jQuery object) for given note.
@@ -216,7 +216,7 @@ export declare class FrontendScriptApi {
     /**
      * @param $el - jquery object on which to set up the tooltip
      */
-    setupElementTooltip($el: JQuery): Promise<void>;
+    setupElementTooltip($el: JQuery): void;
     /**
      * @param protect - true to protect note, false to unprotect
      */

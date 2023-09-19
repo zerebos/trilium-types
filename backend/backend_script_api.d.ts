@@ -37,7 +37,7 @@ interface AppInfo {
  * <p>This is the main backend API interface for scripts. All the properties and methods are published in the "api" object
  * available in the JS backend notes. You can use e.g. <code>api.log(api.startNote.title);</code></p>
  */
-export default class BackendScriptApi {
+export declare class BackendScriptApi {
     constructor();
     /**
      * Note where the script started executing
@@ -162,22 +162,22 @@ export default class BackendScriptApi {
     /**
      * Log given message to trilium logs and log pane in UI
      */
-    log<T>(message: T): void;
+    log<T extends {toString(): string}>(message: T): void;
     /**
      * Returns root note of the calendar.
      */
-    getRootCalendarNote(): Note | null;
+    getRootCalendarNote(): Note;
     /**
      * Returns day note for given date. If such note doesn't exist, it is created.
      * @param date - in YYYY-MM-DD format
      * @param [rootNote] - specify calendar root note, normally leave empty to use the default calendar
      */
-    getDayNote(date: string, rootNote?: Note): Note | null;
+    getDayNote(date: string, rootNote?: Note): Note;
     /**
      * Returns today's day note. If such note doesn't exist, it is created.
      * @param [rootNote] - specify calendar root note, normally leave empty to use the default calendar
      */
-    getTodayNote(rootNote?: Note): Note | null;
+    getTodayNote(rootNote?: Note): Note;
     /**
      * Returns note for the first date of the week of the given date.
      * @param date - in YYYY-MM-DD format
@@ -186,19 +186,19 @@ export default class BackendScriptApi {
      */
     getWeekNote(date: string, options?: {
         startOfTheWeek?: string;
-    }, rootNote?: Note): Note | null;
+    }, rootNote?: Note): Note;
     /**
      * Returns month note for given date. If such note doesn't exist, it is created.
      * @param date - in YYYY-MM format
      * @param [rootNote] - specify calendar root note, normally leave empty to use the default calendar
      */
-    getMonthNote(date: string, rootNote?: Note): Note | null;
+    getMonthNote(date: string, rootNote?: Note): Note;
     /**
      * Returns year note for given year. If such note doesn't exist, it is created.
      * @param year - in YYYY format
      * @param [rootNote] - specify calendar root note, normally leave empty to use the default calendar
      */
-    getYearNote(year: string, rootNote?: Note): Note | null;
+    getYearNote(year: string, rootNote?: Note): Note;
     /**
      * Sort child notes of a given note.
      * @param parentNoteId - this note's child notes will be sorted

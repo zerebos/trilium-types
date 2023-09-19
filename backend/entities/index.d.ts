@@ -1,4 +1,4 @@
-// TODO: genericize the entities with a parent class
+// TODO: changeover from interfaces to declare class
 
 export {Attachment} from "./attachment";
 export {Attribute} from "./attribute";

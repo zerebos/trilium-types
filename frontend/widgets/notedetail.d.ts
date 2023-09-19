@@ -4,7 +4,7 @@ import {NoteContextAwareWidget} from "./notecontextaware";
 import {TypeWidget} from "./type";
 
 
-export class NoteDetailWidget extends NoteContextAwareWidget {
+export declare class NoteDetailWidget extends NoteContextAwareWidget {
     typeWidgets: Record<string, TypeWidget>;
     spacedUpdate: unknown;
     checkFullHeight(): void;
