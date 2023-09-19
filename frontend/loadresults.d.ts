@@ -10,7 +10,7 @@ import {Attribute} from "./entities/attribute";
 interface EntityChange {
     entityId: string;
     entityName: string;
-    entity: any;
+    entity: unknown;
 }
 
 interface BranchRow {
@@ -45,8 +45,8 @@ interface AttachmentRow {
     isDeleted?: boolean;
 }
 
-export class LoadResults {
-    new(entityChanges: EntityChange[]): LoadResults;
+export declare class LoadResults {
+    constructor(entityChanges: EntityChange[]);
     noteIdToComponentId: object;
     componentIdToNoteIds: object;
     branchRows: BranchRow[];
@@ -56,7 +56,7 @@ export class LoadResults {
     contentNoteIdToComponentId: NoteToComponent[];
     optionNames: string[];
     attachmentRows: AttachmentRow[];
-    getEntityRow(entityName: string, entityId: string): any|undefined;
+    getEntityRow(entityName: string, entityId: string): unknown;
     addNote(noteId: string, componentId: string): void;
     addBranch(branchId: string, componentId: string): void;
     getBranchRows(): BranchRow[];

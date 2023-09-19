@@ -7,14 +7,26 @@
     "type": "git",
     "url": "https://github.com/rauenzi/trilium-types.git"
   },
-  "keywords": ["trilium", "notes", "types"],
+  "keywords": [
+    "trilium",
+    "notes",
+    "types"
+  ],
   "scripts": {
     "tsc": "tsc"
   },
   "author": "Zerebos",
   "license": "MIT",
-  "files": ["backend", "common", "frontend", "index.d.ts"],
+  "files": [
+    "backend",
+    "common",
+    "frontend",
+    "index.d.ts"
+  ],
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {

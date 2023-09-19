@@ -23,7 +23,7 @@ export interface NotePojo {
 }
 
 export interface Note extends NotePojo {
-    new(froca: Froca, row: NotePojo): Note;
+    // new(froca: Froca, row: NotePojo): Note;
     froca: Froca;
     attributes: string[];
     targetRelations: string[];
@@ -251,7 +251,7 @@ export interface Note extends NotePojo {
     getNoteComplement(): Promise<Blob>;
     getBlob(): Promise<Blob>;
     toString(): string;
-    readonly dto: Omit<{} & this, "froca">;
+    readonly dto: Omit<object & this, "froca">;
     getCssClass(): string;
     getWorkspaceIconClass(): string;
     getWorkspaceTabBackgroundColor(): string;

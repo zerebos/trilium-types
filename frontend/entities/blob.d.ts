@@ -13,5 +13,7 @@ export interface BlobPojo {
 }
 
 export interface Blob extends BlobPojo {
-    new(row: BlobPojo): Blob;
+    // new(row: BlobPojo): Blob;
+    getJsonContent(): object|null;
+    getJsonContentSafely(): object|null;
 }

@@ -4,7 +4,7 @@ import {NoteContext} from "../entities/context";
 import {NoteContextAwareWidget} from "./notecontextaware";
 
 
-export class TypeWidget extends NoteContextAwareWidget {
+export declare class TypeWidget extends NoteContextAwareWidget {
     /**
      * Used for overriding
      */

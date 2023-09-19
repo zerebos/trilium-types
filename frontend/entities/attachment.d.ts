@@ -18,7 +18,7 @@ export interface AttachmentPojo {
 }
 
 export interface Attachment extends AttachmentPojo {
-    new(froca: Froca, row: AttachmentPojo): Attachment;
+    // new(froca: Froca, row: AttachmentPojo): Attachment;
     froca: Froca;
     update(row: AttachmentPojo): void;
     getNote(): Note;

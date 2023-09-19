@@ -4,8 +4,8 @@
 export type integer = number;
 
 export type LabelAttributeType = "label";
-export type RelationAttributeType = "label";
-export type AttributeType = LabelAttributeType | RelationAttributeType
+export type RelationAttributeType = "relation";
+export type AttributeType = LabelAttributeType | RelationAttributeType;
 
 export type NoteType = "file" | "image" | "search" | "noteMap" | "launcher" |
                        "doc" | "contentWidget" | "text" | "relationMap" |

@@ -1,7 +1,7 @@
 import {NoteContextAwareWidget} from "./notecontextaware";
 
 
-export class RightPanelWidget extends NoteContextAwareWidget {
+export declare class RightPanelWidget extends NoteContextAwareWidget {
     widgetTitle: string;
     help: object;
     readonly $title: JQuery;
@@ -14,5 +14,5 @@ export class RightPanelWidget extends NoteContextAwareWidget {
     /**
      * This is the one to override.
      */
-    doRenderBody(): Promise<any>;
+    doRenderBody(): Promise<void>;
 }

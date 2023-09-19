@@ -2,7 +2,7 @@ import {AttributeType} from "../common";
 import {Attribute, Branch, ETAPIToken, Note, Option, Revision, Attachment, RecentNote, Blob} from "./entities";
 import {NoteSet} from "./noteset";
 
-export interface Becca {
+export declare class Becca {
     notes: Record<string, Note>;
     branches: Record<string, Branch>;
     childParentToBranch: Record<string, Branch>;
@@ -12,7 +12,6 @@ export interface Becca {
     etapiTokens: Record<string, ETAPIToken>;
     loaded?: boolean;
     allNoteSetCache?: NoteSet | null;
-    new(): Becca;
     reset(): void;
     getRoot(): Note;
     findAttributes(type: AttributeType, name: string): Attribute[];
@@ -24,7 +23,7 @@ export interface Becca {
      * @throws
      */
     getNoteOrThrow(noteId: string): Note;
-    getNotes(noteIds: ReadonlyArray<string>, ignoreMissing?: boolean): Note[];
+    getNotes(noteIds: readonly string[], ignoreMissing?: boolean): Note[];
     getBranch(branchId: string): Branch | null;
     /**
      * @throws
@@ -42,13 +41,13 @@ export interface Becca {
      * @throws
      */
     getAttachmentOrThrow(attachmentId: string): Attachment;
-    getAttachments(attachmentIds: ReadonlyArray<string>): Attachment[];
+    getAttachments(attachmentIds: readonly string[]): Attachment[];
     getBlob(entity: {blobId: string}): Blob;
     getOption(name: string): Option;
     getEtapiTokens(): ETAPIToken[];
     getEntity<T>(entityName: string, entityId: string): T;
-    getRecentNotesFromQuery(query: string, params: ReadonlyArray<string>): RecentNote[];
-    getRevisionsFromQuery(query: string, params: ReadonlyArray<string>): Revision[];
+    getRecentNotesFromQuery(query: string, params: readonly string[]): RecentNote[];
+    getRevisionsFromQuery(query: string, params: readonly string[]): Revision[];
     dirtyNoteSetCache(): void;
     getAllNoteSet(): NoteSet | null;
 }

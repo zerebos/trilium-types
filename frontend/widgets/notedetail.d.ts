@@ -13,7 +13,7 @@ export class NoteDetailWidget extends NoteContextAwareWidget {
     scrollToEndEvent({ntxId}: {ntxId: string}): Promise<void>;
     beforeNoteSwitchEvent({noteContext}: {noteContext: NoteContext}): Promise<void>;
     beforeNoteContextRemoveEventt({noteContext}: {noteContext: NoteContext}): Promise<void>;
-    runActiveNoteCommand(params: {ntxId: string}): Promise<any>;
+    runActiveNoteCommand(params: {ntxId: string}): Promise<void>;
     printActiveNoteEvent(): Promise<void>;
     hoistedNoteChangedEvent({ntxId}: {ntxId: string}): void;
     beforeUnloadEvent(): void;

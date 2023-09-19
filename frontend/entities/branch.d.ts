@@ -18,7 +18,7 @@ export interface BranchPojo {
 }
 
 export interface Branch extends BranchPojo {
-    new(froca: Froca, row: BranchPojo): Branch;
+    // new(froca: Froca, row: BranchPojo): Branch;
     froca: Froca;
     update(row: BranchPojo): void;
     getNote(): Note;

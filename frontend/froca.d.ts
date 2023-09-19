@@ -12,8 +12,7 @@ interface ServerResponse {
     attributes: AttributePojo[];
 }
 
-export interface Froca {
-    new(): Froca;
+export declare class Froca {
     initializedPromise: Promise<void>;
     notes: Record<string, Note>;
     branches: Record<string, Branch>;
@@ -23,14 +22,14 @@ export interface Froca {
     loadInitialTree(): Promise<void>;
     loadSubTree(subTreeNoteId: string): Promise<Note>;
     addResp(resp: ServerResponse): boolean | undefined;
-    reloadNotes(noteIds: ReadonlyArray<string>): Promise<void>;
+    reloadNotes(noteIds: readonly string[]): Promise<void>;
     loadSearchNote(noteId: string): Promise<undefined | {error: string}>;
-    getNotesFromCache(noteIds: ReadonlyArray<string>, silentNotFoundError?: boolean): Note[];
-    getNotes(noteIds: ReadonlyArray<string>, silentNotFoundError?: boolean): Promise<Note[]>;
+    getNotesFromCache(noteIds: readonly string[], silentNotFoundError?: boolean): Note[];
+    getNotes(noteIds: readonly string[], silentNotFoundError?: boolean): Promise<Note[]>;
     noteExists(noteId: string): Promise<boolean>;
     getNote(noteId: string, silentNotFoundError?: boolean): Promise<Note>;
     getNoteFromCache(noteId: string): Note|null;
-    getBranches(branchIds: ReadonlyArray<string>, silentNotFoundError?: boolean): Branch[];
+    getBranches(branchIds: readonly string[], silentNotFoundError?: boolean): Branch[];
     getBranch(branchId: string, silentNotFoundError?: boolean): Branch | undefined;
     getBranchId(parentNoteId: string, childNoteId: string): Promise<string | null>;
     getAttachment(attachmentId: string, silentNotFoundError?: boolean): Promise<Attachment>;

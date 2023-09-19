@@ -16,8 +16,8 @@ declare global {
 // type NotePath = string;
 // type NoteID = string;
 
-type ISODateFormat = `${number}-${number}-${number}`;  // 'YYYY-MM-DD'
-type MonthFormat = `${number}-${number}`;  // 'YYYY-MM-DD'
+type ISODateFormat = `${number}-${number}-${number}`; // 'YYYY-MM-DD'
+type MonthFormat = `${number}-${number}`; // 'YYYY-MM-DD'
 type Entity = Attachment | Attribute | Blob | Branch | NoteContext | Note;
 
 
@@ -25,8 +25,8 @@ type Entity = Attachment | Attribute | Blob | Branch | NoteContext | Note;
  * <p>This is the main frontend API interface for scripts. All the properties and methods are published in the "api" object
  * available in the JS frontend notes. You can use e.g. <code>api.showMessage(api.startNote.title);</code></p>
  */
-export default class FrontendScriptApi {
-    new(startNote: Note, currentNote: Note, originEntity?: any, $container?: JQuery): FrontendScriptApi;
+export declare class FrontendScriptApi {
+    constructor(startNote: Note, currentNote: Note, originEntity?: Entity | null, $container?: JQuery);
     /**
      * Container of all the rendered script content
      */
@@ -83,9 +83,9 @@ export default class FrontendScriptApi {
      * @deprecated you can now create/modify launchers in the top-left Menu -> Configure Launchbar
      *             for special needs there's also backend API's createOrUpdateLauncher()
      */
-    addButtonToToolbar(opts: {
+    addButtonToToolbar<T extends (...args: unknown[]) => unknown>(opts: {
         title: string;
-        action: (...params: any[]) => any;
+        action: T;
         id?: string;
         icon?: string;
         shortcut?: string;
@@ -97,7 +97,7 @@ export default class FrontendScriptApi {
      * @param params - list of parameters to the anonymous function to be sent to backend
      * @returns return value of the executed function on the backend
      */
-    runOnBackend<Func extends (...args: any[]) => any>(script: Func, params: Parameters<Func>): Promise<ReturnType<Func>>;
+    runOnBackend<Func extends (...args: unknown[]) => unknown>(script: Func, params: Parameters<Func>): Promise<ReturnType<Func>>;
     /**
      * This is a powerful search method - you can search by attributes and their values, e.g.:
      * "#dateModified =* MONTH AND #log". See full documentation for all options at: https://github.com/zadam/trilium/wiki/Search
@@ -149,11 +149,11 @@ export default class FrontendScriptApi {
     /**
      * Trigger command. This is a very low-level API which should be avoided if possible.
      */
-    triggerCommand(name: string, data: any): void;
+    triggerCommand<T>(name: string, data: T): void;
     /**
      * Trigger event. This is a very low-level API which should be avoided if possible.
      */
-    triggerEvent(name: string, data: any): void;
+    triggerEvent<T>(name: string, data: T): void;
     
     /**
      * Create a note link (jQuery object) for given note.
@@ -259,7 +259,7 @@ export default class FrontendScriptApi {
      * @param [namespace] - specify namespace of the handler for the cases where call for bind may be repeated.
      *                               If a handler with this ID exists, it's replaced by the new handler.
      */
-    bindGlobalShortcut<Func extends (...args: any[]) => any>(keyboardShortcut: string, handler: Func, namespace?: string): Promise<void>;
+    bindGlobalShortcut<Func extends (...args: unknown[]) => unknown>(keyboardShortcut: string, handler: Func, namespace?: string): Promise<void>;
     /**
      * Trilium runs in a backend and frontend process, when something is changed on the backend from a script,
      * frontend will get asynchronously synchronized.
@@ -293,5 +293,5 @@ export default class FrontendScriptApi {
     /**
      * Log given message to the log pane in UI
      */
-    log(message: any): void;
+    log<T extends {toString(): string}>(message: T): void;
 }

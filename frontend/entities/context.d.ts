@@ -24,7 +24,7 @@ interface ViewScope {
 }
 
 export interface NoteContext extends Component {
-    new(ntxId?: string, hoistedNoteId?: string, mainNtxId?: string | null): NoteContext;
+    // new(ntxId?: string, hoistedNoteId?: string, mainNtxId?: string | null): NoteContext;
     readonly ntxId: string;
     readonly hoisedNoteId: string;
     readonly mainNtxId: string;

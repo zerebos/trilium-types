@@ -7,14 +7,14 @@ interface attrs {
     readonly style: string;
 }
 
-export class BasicWidget extends Component {
+export declare class BasicWidget extends Component {
     readonly attrs: attrs;
     readonly classes: string[];
     readonly children: Component[];
     readonly childPositionCounter: integer;
     readonly cssEl: string;
     $widget: JQuery;
-    child(...components: ReadonlyArray<Component>): this;
+    child(...components: readonly Component[]): this;
     id(id: string): this;
     class(className: string): this;
     css(name: string, value: string): this;

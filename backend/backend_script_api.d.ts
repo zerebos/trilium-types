@@ -11,6 +11,11 @@ import {Attribute} from "./entities/attribute";
 import {SQL} from "./sql";
 
 
+interface NoteWithBranch {
+    note: Note;
+    branch: Branch;
+}
+
 /**
  * <p>This is the main backend API interface for scripts. All the properties and methods are published in the "api" object
  * available in the JS backend notes. You can use e.g. <code>api.log(api.startNote.title);</code></p>
@@ -90,13 +95,13 @@ export default class BackendScriptApi {
      * Create text note. See also createNewNote() for more options.
      * @returns - object having "note" and "branch" keys representing respective objects
      */
-    createTextNote(parentNoteId: string, title: string, content: string): any;
+    createTextNote(parentNoteId: string, title: string, content: string): NoteWithBranch;
     /**
      * Create data note - data in this context means object serializable to JSON. Created note will be of type 'code' and
      * JSON MIME type. See also createNewNote() for more options.
      * @returns object having "note" and "branch" keys representing respective objects
      */
-    createDataNote(parentNoteId: string, title: string, content: any): any;
+    createDataNote(parentNoteId: string, title: string, content: any): NoteWithBranch;
     /**
      * @param params.type - text, code, file, image, search, book, relationMap, canvas
      * @param [params.mime] - value is derived from default mimes for type
@@ -113,7 +118,7 @@ export default class BackendScriptApi {
         isExpanded?: boolean;
         prefix?: string;
         notePosition?: integer;
-    }): any;
+    }): NoteWithBranch;
     /**
      * @param parentNoteId - create new note under this parent
      * @param [extraOptions.json = false] - should the note be JSON
@@ -136,7 +141,7 @@ export default class BackendScriptApi {
             name: string;
             value?: string;
         }[];
-    }): any;
+    }): NoteWithBranch;
     /**
      * Log given message to trilium logs and log pane in UI
      */

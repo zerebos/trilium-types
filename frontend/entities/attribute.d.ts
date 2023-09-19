@@ -15,7 +15,7 @@ export interface AttributePojo {
 }
 
 export interface Attribute extends AttributePojo {
-    new(froca: Froca, row: AttributePojo): Attribute;
+    // new(froca: Froca, row: AttributePojo): Attribute;
     froca: Froca;
     update(row: AttributePojo): void;
     getNote(): Note;
