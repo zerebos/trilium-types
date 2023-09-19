@@ -11,9 +11,26 @@ import {Attribute} from "./entities/attribute";
 import {SQL} from "./sql";
 
 
+// TODO: better organize these
 interface NoteWithBranch {
     note: Note;
     branch: Branch;
+}
+
+interface SearchParams {
+    includeArchivedNotes?: boolean;
+    ignoreHoistedNote?: boolean
+}
+
+interface AppInfo {
+    appVersion: string;
+    dbVersion: number;
+    syncVersion: number;
+    buildDate: string;
+    buildRevision: string;
+    dataDirectory: string;
+    clipperProtocolVersion: string;
+    utcDateTime: Date; // for timezone inference
 }
 
 /**
@@ -58,12 +75,12 @@ export default class BackendScriptApi {
      * This is a powerful search method - you can search by attributes and their values, e.g.:
      * "#dateModified =* MONTH AND #log". See {@link https://github.com/zadam/trilium/wiki/Search} for full documentation for all options
      */
-    searchForNotes(query: string, searchParams?: any): Note[];
+    searchForNotes(query: string, searchParams?: SearchParams): Note[];
     /**
      * This is a powerful search method - you can search by attributes and their values, e.g.:
      * "#dateModified =* MONTH AND #log". See {@link https://github.com/zadam/trilium/wiki/Search} for full documentation for all options
      */
-    searchForNote(query: string, searchParams?: any): Note | null;
+    searchForNote(query: string, searchParams?: SearchParams): Note | null;
     /**
      * Retrieves notes with given label name & value
      * @param name - attribute name
@@ -80,11 +97,11 @@ export default class BackendScriptApi {
      * If there's no branch between note and parent note, create one. Otherwise, do nothing. Returns the new or existing branch.
      * @param prefix - if branch is created between note and parent note, set this prefix
      */
-    ensureNoteIsPresentInParent(noteId: string, parentNoteId: string, prefix: string): any;
+    ensureNoteIsPresentInParent(noteId: string, parentNoteId: string, prefix: string): {branch: Branch | null, success: boolean, message?: string};
     /**
      * If there's a branch between note and parent note, remove it. Otherwise, do nothing.
      */
-    ensureNoteIsAbsentFromParent(noteId: string, parentNoteId: string): void;
+    ensureNoteIsAbsentFromParent(noteId: string, parentNoteId: string): {success: boolean, message?: string};
     /**
      * Based on the value, either create or remove branch between note and parent note.
      * @param present - true if we want the branch to exist, false if we want it gone
@@ -101,7 +118,7 @@ export default class BackendScriptApi {
      * JSON MIME type. See also createNewNote() for more options.
      * @returns object having "note" and "branch" keys representing respective objects
      */
-    createDataNote(parentNoteId: string, title: string, content: any): NoteWithBranch;
+    createDataNote<T extends Record<string, unknown>>(parentNoteId: string, title: string, content: T): NoteWithBranch;
     /**
      * @param params.type - text, code, file, image, search, book, relationMap, canvas
      * @param [params.mime] - value is derived from default mimes for type
@@ -136,16 +153,16 @@ export default class BackendScriptApi {
         isProtected?: boolean;
         type?: string;
         mime?: string;
-        attributes?: {
+        attributes?: Array<{
             type: AttributeType;
             name: string;
             value?: string;
-        }[];
+        }>;
     }): NoteWithBranch;
     /**
      * Log given message to trilium logs and log pane in UI
      */
-    log(message: any): void;
+    log<T>(message: T): void;
     /**
      * Returns root note of the calendar.
      */
@@ -205,7 +222,7 @@ export default class BackendScriptApi {
      * exists, then we'll use that transaction.
      * @returns result of func callback
      */
-    transactional(func: (...params: any[]) => any): any;
+    transactional<T extends (...params: unknown[]) => unknown>(func: T): ReturnType<T>;
     /**
      * Return randomly generated string of given length. This random string generation is NOT cryptographically secure.
      * @param length - of the string
@@ -229,7 +246,7 @@ export default class BackendScriptApi {
     /**
      * @returns - object representing basic info about running Trilium version
      */
-    getAppInfo(): any | any;
+    getAppInfo(): AppInfo;
     /**
      * Creates a new launcher to the launchbar. If the launcher (id) already exists, it will be updated.
      * @param opts.id - id of the launcher, only alphanumeric at least 6 characters long
@@ -254,7 +271,7 @@ export default class BackendScriptApi {
         targetNoteId?: string;
         scriptNoteId?: string;
         widgetNoteId?: string;
-    }): any;
+    }): {note: Note};
     /**
      * @param format - either 'html' or 'markdown'
      */

@@ -1,3 +1,5 @@
+
+// TODO: maybe document all row types rather than use generics?
 export interface SQL {
     /**
      * Get single value from the given query - first column from first returned row.
@@ -5,39 +7,39 @@ export interface SQL {
      * @param [params] - array of params if needed
      * @returns [object] - single value
      */
-    getValue(query: string, params?: object[]): any;
+    getValue<T>(query: string, params?: unknown[]): T;
     /**
      * Get first returned row.
      * @param query - SQL query with ? used as parameter placeholder
      * @param [params] - array of params if needed
      * @returns - map of column name to column value
      */
-    getRow(query: string, params?: object[]): any;
+    getRow<T extends Record<string, unknown>>(query: string, params?: unknown[]): T;
     /**
      * Get all returned rows.
      * @param query - SQL query with ? used as parameter placeholder
      * @param [params] - array of params if needed
      * @returns - array of all rows, each row is a map of column name to column value
      */
-    getRows(query: string, params?: object[]): object[];
+    getRows<T extends Record<string, unknown>>(query: string, params?: unknown[]): T[];
     /**
      * Get a map of first column mapping to second column.
      * @param query - SQL query with ? used as parameter placeholder
      * @param [params] - array of params if needed
      * @returns - map of first column to second column
      */
-    getMap(query: string, params?: object[]): any;
+    getMap<K extends string, V>(query: string, params?: unknown[]): Record<K, V>;
     /**
      * Get a first column in an array.
      * @param query - SQL query with ? used as parameter placeholder
      * @param [params] - array of params if needed
      * @returns - array of first column of all returned rows
      */
-    getColumn(query: string, params?: object[]): object[];
+    getColumn<T>(query: string, params?: unknown[]): T[];
     /**
      * Execute SQL
      * @param query - SQL query with ? used as parameter placeholder
      * @param [params] - array of params if needed
      */
-    execute(query: string, params?: object[]): void;
+    execute(query: string, params?: unknown[]): void;
 }

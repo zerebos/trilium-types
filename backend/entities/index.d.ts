@@ -1,3 +1,5 @@
+// TODO: genericize the entities with a parent class
+
 export {Attachment} from "./attachment";
 export {Attribute} from "./attribute";
 export {AbstractBeccaEntity} from "./base";

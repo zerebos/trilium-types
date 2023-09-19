@@ -1,4 +1,3 @@
-import {integer} from "../../common";
 import {AbstractBeccaEntity} from "./base";
 
 
@@ -11,6 +10,6 @@ interface RecentNotePojo {
 export interface RecentNote extends AbstractBeccaEntity<RecentNotePojo>, RecentNotePojo {
     readonly entityName: "recent_notes";
     readonly primaryKeyName: "noteId";
-    new(row: RecentNotePojo): RecentNote;
+    // new(row: RecentNotePojo): RecentNote;
 
 }

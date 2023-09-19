@@ -32,7 +32,7 @@ export interface Attachment extends AbstractBeccaEntity<AttachmentPojo>, Attachm
     readonly primaryKeyName: "attachmentId";
     readonly hashedProperties: ["attachmentId", "ownerId", "role", "mime", "title", "blobId",
                        "utcDateScheduledForErasureSince", "utcDateModified"];
-    new(row: AttachmentPojo): Attachment;
+    // new(row: AttachmentPojo): Attachment;
     copy(): Attachment;
     getNote(): Note;
     /**
@@ -47,9 +47,9 @@ export interface Attachment extends AbstractBeccaEntity<AttachmentPojo>, Attachm
      * @param [opts.forceSave = false] - will also save this BAttachment entity
      * @param [opts.forceFrontendReload = false] - override frontend heuristics on when to reload, instruct to reload
      */
-    setContent(content: any, opts?: {
-        forceSave?: any;
-        forceFrontendReload?: any;
+    setContent(content: string | Buffer, opts?: {
+        forceSave?: boolean;
+        forceFrontendReload?: boolean;
     }): void;
     convertToNote(): {note: Note, branch: Branch};
     getFilename(): string;

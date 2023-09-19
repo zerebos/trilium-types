@@ -19,7 +19,7 @@ export interface Branch extends AbstractBeccaEntity<BranchPojo>, BranchPojo {
     readonly entityName: "branches";
     readonly primaryKeyName: "branchId";
     readonly hashedProperties: ["branchId", "noteId", "parentNoteId", "prefix"];
-    new(row: BranchPojo): Branch;
+    // new(row: BranchPojo): Branch;
     updateFromRow(row: BranchPojo): void;
     init(): void;
     readonly childNote: Note;

@@ -1,8 +1,8 @@
 import {TaskType, integer} from "../common";
 
 
-export class TaskContext {
-    new(taskId: string, taskType?: string, data?: object): TaskContext;
+export declare class TaskContext {
+    constructor(taskId: string, taskType?: string, data?: object);
     taskId: string;
     taskType: TaskType;
     data: object;
@@ -12,5 +12,5 @@ export class TaskContext {
     getInstance(taskId: string, taskType: TaskType, data?: object|null): Promise<TaskContext>;
     increaseProgressCount(): void;
     reportError(message: string): void;
-    taskSucceeded(result: any): void;
+    taskSucceeded<T>(result: T): void;
 }

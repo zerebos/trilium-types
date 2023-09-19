@@ -25,7 +25,7 @@ export interface Revision extends AbstractBeccaEntity<RevisionPojo>, RevisionPoj
     readonly primaryKeyName: "revisionId";
     readonly hashedProperties: ["revisionId", "noteId", "title", "isProtected", "dateLastEdited", "dateCreated",
                                 "utcDateLastEdited", "utcDateCreated", "utcDateModified", "blobId"];
-    new(row: RevisionPojo, titleDecrypted?: boolean): Revision;
+    // new(row: RevisionPojo, titleDecrypted?: boolean): Revision;
 
     getNote(): Note;
     /**

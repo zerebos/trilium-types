@@ -12,6 +12,6 @@ export interface Option extends AbstractBeccaEntity<OptionPojo>, OptionPojo {
     readonly entityName: "options";
     readonly primaryKeyName: "name";
     readonly hashedProperties: ["name", "value"];
-    new(row: OptionPojo): Option;
+    // new(row: OptionPojo): Option;
     updateFromRow(row: OptionPojo): void;
 }

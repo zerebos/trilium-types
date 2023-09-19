@@ -19,7 +19,7 @@ export interface Attribute extends AbstractBeccaEntity<AttributePojo>, Attribute
     readonly entityName: "attributes";
     readonly primaryKeyName: "attributeId";
     readonly hashedProperties: ["attributeId", "noteId", "type", "name", "value", "isInheritable"];
-    new(row: AttributePojo): Attribute;
+    // new(row: AttributePojo): Attribute;
     updateFromRow(row: AttributePojo): void;
     init(): void;
     validate(): void;

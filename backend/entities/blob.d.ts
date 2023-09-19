@@ -14,5 +14,5 @@ export interface Blob extends AbstractBeccaEntity<BlobPojo>, BlobPojo {
     readonly entityName: "blobs";
     readonly primaryKeyName: "blobId";
     readonly hashedProperties: ["blobId", "content"];
-    new(row: BlobPojo): Blob;
+    // new(row: BlobPojo): Blob;
 }
