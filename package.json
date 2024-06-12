@@ -1,6 +1,6 @@
 {
   "name": "trilium-types",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Type definitions for Trilium Notes.",
   "homepage": "https://github.com/rauenzi/trilium-types",
   "repository": {

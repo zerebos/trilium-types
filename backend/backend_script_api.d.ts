@@ -276,6 +276,14 @@ export declare class BackendScriptApi {
      * @param format - either 'html' or 'markdown'
      */
     exportSubtreeToZipFile(noteId: string, format: string, zipFilePath: string): Promise<void>;
+
+    /**
+     * Creates a new backup with the format backup-${name}.db
+     * @param {string} backupName - If the backupName is e.g. "now", then the backup will be written to "backup-now.db" file
+     * @returns {Promise<void>} - resolves once the backup is finished
+     */
+    backupNow(backupName: string): Promise<void>;
+
     /**
      * This object contains "at your risk" and "no BC guarantees" objects for advanced use cases.
      * @property {object} becca - provides access to the backend in-memory object graph, see {@link https://github.com/zadam/trilium/blob/master/src/becca/becca.js}

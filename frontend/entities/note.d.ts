@@ -20,6 +20,7 @@ export interface NotePojo {
      * content-type, e.g. "application/json"
      */
     mime: string;
+    blobId: string;
 }
 
 export interface Note extends NotePojo {

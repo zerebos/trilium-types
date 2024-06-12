@@ -10,7 +10,7 @@ npm install @types/trilium@npm:trilium-types
 
 ## Usage
 
-**Please note:** These types were made for the *latest* version of Trilium (v0.61) which adds the attachments feature. If you're developing for the stable release (v0.60) you can still use these types, just avoid or ignore anything related to attachments.
+This package keeps up with the latest version of Trilium available, there is not existing table or mapping showing old version of this package that correspond to old version of Trilium.
 
 ### TypeScript
 
